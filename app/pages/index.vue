@@ -87,6 +87,7 @@ const handleFullReset = () => {
       </div>
       <div class="controls">
         <div v-if="!chosenMathOperation" class="math-operation">
+          <button class="back-step-button" @click="playerNameEntered = '' ">Změna jména</button>
           <h2>Co si dnes zkusíme?</h2>
           <button :style="{ animationDelay: '0.1s' }" @click="chosenMathOperation = 'addition'">Sčítání</button>
           <button :style="{ animationDelay: '0.3s' }" @click="chosenMathOperation = 'subtraction'">Odčítání</button>
@@ -94,6 +95,7 @@ const handleFullReset = () => {
           <button :style="{ animationDelay: '0.5s' }" @click="chosenMathOperation = 'division'">Dělení</button>
         </div>
         <div v-else-if="!chosenDifficulty" class="difficulty-selection">
+          <button class="back-step-button" @click="chosenMathOperation = null">⬅</button>
           <h2>Vyber obtížnost</h2>
           <div class="difficulty-wrapper">
             <div class="dropdown-container">
@@ -111,13 +113,14 @@ const handleFullReset = () => {
             </div>
             <button
               :style="{ animationDelay: '0.3s' }"
-              @click="chosenDifficulty = 'medium'; showStartMessage = true;">Střední 💡</button>
-            <button :style="{ animationDelay: '0.4s' }" @click="chosenDifficulty = 'hard'; showStartMessage = true;">Těžká 🚀</button>
+              @click="chosenDifficulty = 'medium'; chosenSubtype = null; showStartMessage = true;">Střední 💡</button>
+            <button :style="{ animationDelay: '0.4s' }" @click="chosenDifficulty = 'hard'; chosenSubtype = null; showStartMessage = true;">Těžká 🚀</button>
           </div>
         </div>
         <div v-else-if="showStartMessage" class="welcome-screen">
+          <button class="back-step-button" @click="chosenDifficulty = null; showStartMessage = false">⬅</button>
           <h2>
-            Máš vybráno {{ operationNames[chosenMathOperation] }} a obtížnost {{ difficultyNames[chosenDifficulty] }}
+            Máš vybráno {{ operationNames[chosenMathOperation] }} <span v-if="chosenSubtype">{{ chosenSubtype }}</span> a obtížnost {{ difficultyNames[chosenDifficulty] }}
           </h2>
           <button @click="console.log('klik na start');showStartMessage = false; gameStarted = true;"> Jdeme na to! 🧠 </button>
         </div>
@@ -180,6 +183,24 @@ const handleFullReset = () => {
 
 .name-selection-screen button {
   margin: 80px;
+}
+
+.back-step-button {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  margin: 0;
+  top: 20px;
+  left: 20px;
+  border: 2px solid white;
+}
+
+.back-step-button:hover {
+  background-color: white;
+  color: black;
+  transform: scale(1.02);
 }
 
 .math-operation button,

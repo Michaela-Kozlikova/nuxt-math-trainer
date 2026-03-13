@@ -199,12 +199,8 @@ onMounted(() => {
         <p :class="['feedback-text',{ success: isCorrect === true, error: isCorrect === false }, ]"> {{ feedbackMessage }}</p>
       </div>
       <div class="actions">
-        <button v-if="isCorrect !== true" @click="checkAnswer">
-          Zkontrolovat
-        </button>
-        <button v-if="isCorrect === true" @click="generate">
-          Další příklad
-        </button>
+        <button v-if="isCorrect !== true" @click="checkAnswer">Zkontrolovat</button>
+        <button v-if="isCorrect === true" @click="generate">Další příklad</button>
       </div>
     </div>
     <div v-else class="game-over-screen">
@@ -213,7 +209,7 @@ onMounted(() => {
 
       <div class="stats">
         <p class="stats-player"><strong>Hráč: </strong>{{ props.playerName }}</p>
-        <p class="stats-info"><strong>Procvičili jsme: </strong>{{ operationNames[props.operation] }}</p>
+        <p class="stats-info"><strong>Procvičili jsme: </strong>{{ operationNames[props.operation] }} <span v-if="props.subType"> {{ props.subType }}</span></p>
         <p class="stats-info"><strong>Obtížnost: </strong>{{ difficultyNames[props.difficulty] }}</p>
         <p class="stats-score"><strong>Správně: </strong>{{ score }} ✅</p>
         <p class="stats-errors"><strong>Chybně: </strong>{{ errors }} ❌</p>
@@ -262,12 +258,21 @@ input[type="number"] {
 }
 
 .back-button {
+  background-color: transparent;
+  color: white;
+  font-size: 1.2rem;
+  padding: 10px 20px;
   margin: 0;
   top: 20px;
   left: 20px;
-  font-size: 1.5rem;
+  border: 1px solid white;
   z-index: 10;
-  background-color:rgb(255, 242, 0);
+}
+
+.back-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: scale(1.02);
 }
 
 .progress-container {
@@ -390,7 +395,7 @@ button:hover {
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
     filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
     animation: fadeInScale 0.9s ease-out;
-    z-index: 10;
+    z-index: 5;
     background-color: rgb(250, 239, 212);
 }
 
