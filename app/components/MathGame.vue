@@ -11,7 +11,7 @@ const props = defineProps({
 const emit = defineEmits(["close", "resetAll"]);
 
 const resetToStart = () => {
-    emit("resetAll");
+  emit("resetAll");
 };
 
 const numberA = ref(0);
@@ -38,13 +38,13 @@ const operationNames = {
   addition: "sčítání",
   subtraction: "odčítání",
   multiplication: "násobení",
-  division: "dělení",
+  division: "dělení"
 };
 
 const difficultyNames = {
   easy: "lehká",
   medium: "střední",
-  hard: "těžká",
+  hard: "těžká"
 };
 
 const successMessages = [
@@ -171,15 +171,26 @@ onMounted(() => {
 </script>
 
 <template>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
   <div class="game-screen">
     <div class="game-screen-header">
-        <button class="back-button" @click="goHome">Menu</button>
-        <div class="progress-container">
-            <div v-for="n in maxQuestions" :key="n" class="star-step" :class="{'filled': n < currentQuestionCount, 'active' : n ===currentQuestionCount}">⭐</div>
+      <button class="back-button" @click="goHome">Menu</button>
+      <div class="progress-container">
+        <div
+          v-for="n in maxQuestions"
+          :key="n"
+          class="star-step"
+          :class="{
+            filled: n < currentQuestionCount,
+            active: n === currentQuestionCount,
+          }"
+        >
+          ⭐
         </div>
-        <div class="player-info">
-            Hraje: <span>{{ props.playerName }}</span>
-        </div> 
+      </div>
+      <div class="player-info">
+        Hraje: <span>{{ props.playerName }}</span>
+      </div>
     </div>
     <div v-if="!isGameOver">
       <div class="math-problem">
@@ -196,7 +207,14 @@ onMounted(() => {
       </div>
 
       <div v-if="feedbackMessage" class="feedback-container">
-        <p :class="['feedback-text',{ success: isCorrect === true, error: isCorrect === false }, ]"> {{ feedbackMessage }}</p>
+        <p
+          :class="[
+            'feedback-text',
+            { success: isCorrect === true, error: isCorrect === false },
+          ]"
+        >
+          {{ feedbackMessage }}
+        </p>
       </div>
       <div class="actions">
         <button v-if="isCorrect !== true" @click="checkAnswer">Zkontrolovat</button>
@@ -208,9 +226,17 @@ onMounted(() => {
       <p><strong>Skvělá práce. Jen tak dál.</strong></p>
 
       <div class="stats">
-        <p class="stats-player"><strong>Hráč: </strong>{{ props.playerName }}</p>
-        <p class="stats-info"><strong>Procvičili jsme: </strong>{{ operationNames[props.operation] }} <span v-if="props.subType"> {{ props.subType }}</span></p>
-        <p class="stats-info"><strong>Obtížnost: </strong>{{ difficultyNames[props.difficulty] }}</p>
+        <p class="stats-player">
+          <strong>Hráč: </strong>{{ props.playerName }}
+        </p>
+        <p class="stats-info">
+          <strong>Procvičili jsme: </strong
+          >{{ operationNames[props.operation] }}
+          <span v-if="props.subType"> {{ props.subType }}</span>
+        </p>
+        <p class="stats-info">
+          <strong>Obtížnost: </strong>{{ difficultyNames[props.difficulty] }}
+        </p>
         <p class="stats-score"><strong>Správně: </strong>{{ score }} ✅</p>
         <p class="stats-errors"><strong>Chybně: </strong>{{ errors }} ❌</p>
 
@@ -218,7 +244,7 @@ onMounted(() => {
       </div>
     </div>
     <video v-if="isGameOver" autoplay muted loop class="background-video">
-        <source src="/pics/confetti.mp4" type="video/mp4">
+      <source src="/pics/confetti.mp4" type="video/mp4" />
     </video>
   </div>
 </template>
@@ -240,21 +266,25 @@ input[type="number"] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, rgb(0, 0, 71) 0%, rgb(100, 100, 255) 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(0, 0, 71) 0%,
+    rgb(100, 100, 255) 100%
+  );
   min-height: 100vh;
   padding-top: 80px;
 }
 
 .game-screen-header {
-    display: flex;
-    box-sizing: border-box;
-    justify-content: space-between;
-    position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-    width: 100%;
-    padding: 10px 20px;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
 }
 
 .back-button {
@@ -276,18 +306,23 @@ input[type="number"] {
 }
 
 .progress-container {
-    display: flex;
-    flex: 2;
-    justify-content: center;
-    gap: 5px;
+  display: flex;
+  flex: 2;
+  justify-content: center;
+  gap: 5px;
 }
 
 .star-step {
   font-size: 1.2rem;
   filter: grayscale(1) opacity(0.3);
 }
-.star-step.filled { filter: grayscale(0) opacity(1); }
-.star-step.active { filter: grayscale(0) opacity(1); transform: scale(1.3); }
+.star-step.filled {
+  filter: grayscale(0) opacity(1);
+}
+.star-step.active {
+  filter: grayscale(0) opacity(1);
+  transform: scale(1.3);
+}
 
 .star-step.filled {
   filter: grayscale(0) opacity(1);
@@ -295,16 +330,29 @@ input[type="number"] {
 }
 
 @keyframes starCelebrate {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { 
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
     transform: scale(1.8) rotate(120deg);
-    filter: brightness(2) drop-shadow(0 0 15px white);}
-  100% { transform: scale(1); filter: brightness(1); }
+    filter: brightness(2) drop-shadow(0 0 15px white);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
 }
 
 @keyframes pulse {
-  from { transform: scale(1.1); filter: drop-shadow(0 0 2px gold); }
-  to { transform: scale(1.4); filter: drop-shadow(0 0 10px gold); }
+  from {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 2px gold);
+  }
+  to {
+    transform: scale(1.4);
+    filter: drop-shadow(0 0 10px gold);
+  }
 }
 
 .star-step.active {
@@ -324,26 +372,28 @@ input[type="number"] {
 }
 
 .actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .math-problem {
+  display: flex;
+  font-family: "Chewy";
   font-size: 60px;
   color: gold;
 }
 
 .answer-input {
+  font-family: "Chewy";
   width: 120px;
-  font-size: 40px;
+  font-size: 60px;
   background-color: transparent;
   color: gold;
-  font-size: 50px;
   border: none;
   text-align: center;
   outline: none;
-  padding: 5px;
+  padding: 0;
 }
 
 .feedback-container {
@@ -385,59 +435,59 @@ button:hover {
 }
 
 .game-over-screen {
-    position: relative;
-    font-family: "Indie Flower";
-    font-size: 2rem;
-    border-radius: 20px;
-    padding: 40px;
-    bottom: 50px;
-    text-align: center;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
-    animation: fadeInScale 0.9s ease-out;
-    z-index: 5;
-    background-color: rgb(250, 239, 212);
+  position: relative;
+  font-family: "Indie Flower";
+  font-size: 2rem;
+  border-radius: 20px;
+  padding: 40px;
+  bottom: 50px;
+  text-align: center;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+  animation: fadeInScale 0.9s ease-out;
+  z-index: 5;
+  background-color: rgb(250, 239, 212);
 }
 
 .game-over-screen h1 {
-    margin: 0;
+  margin: 0;
 }
 
 .background-video {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    object-fit: cover;
-    z-index: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .stats {
-    padding: 50px;
-    background-color: rgb(255, 253, 235);
-    border-radius: 20px;
+  padding: 50px;
+  background-color: rgb(255, 253, 235);
+  border-radius: 20px;
 }
 
 .stats-score {
-    color: #2ecc71;
+  color: #2ecc71;
 }
 .stats-errors {
-    color: #ff7675;
+  color: #ff7675;
 }
 
 @keyframes fadeInScale {
   0% {
-    opacity: 0; 
-    transform: scale(0.9); 
+    opacity: 0;
+    transform: scale(0.9);
   }
   70% {
-    opacity: 1; 
-    transform: scale(1.1); 
+    opacity: 1;
+    transform: scale(1.1);
   }
   100% {
-    opacity: 1; 
-    transform: scale(1); 
+    opacity: 1;
+    transform: scale(1);
   }
 }
 </style>
