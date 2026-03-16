@@ -11,6 +11,12 @@ const showStartMessage = ref(false);
 const gameStarted = ref(false);
 const isDropDownOpen = ref(false);
 
+const submitName = () => {
+  if (playerName.value.trim().length >= 2) {
+    playerNameEntered.value = true;
+  }
+};
+
 const operationNames = {
   addition: "sčítání",
   subtraction: "odčítání",
@@ -73,10 +79,10 @@ const handleFullReset = () => {
       <input
         v-model="playerName"
         placeholder="Napiš své jméno"
-        @keyup.enter="playerNameEntered = true"
+        @keyup.enter="submitName"
         class="name-input"
       />
-      <button v-if="playerName.length > 1" @click="playerNameEntered = true">
+      <button v-if="playerName.trim().length >= 2" @click="playerNameEntered = true">
         Pokračovat
       </button>
     </div>
