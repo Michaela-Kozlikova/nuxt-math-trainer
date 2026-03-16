@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const props = defineProps({
   operation: String,
@@ -59,6 +59,24 @@ const errorMessages = [
   "Skoro to bylo",
   "Těsně vedle"
 ];
+
+const emptyMessages = [
+  "Haló! Tady je prázdno! 🫙",
+  "Napiš aspoň něco, prázdno není výsledek! ✍️",
+  "Bez výsledku se dál nepohneme... 🛑"
+];
+
+const finalMessage = computed(() => {
+  if (score.value >= 18) {
+    return "Jsi matematický bůh! 🏆"
+  } else if (score.value >= 15) {
+    return "Skoro bez chybičky. Skvělá práce.⭐"
+  } else if (score.value >= 11) {
+    return " Dobrá práce, ale ještě to trochu potrénujeme?💪"
+  } else { 
+    return "Chce to ještě trénovat. Pojď si to zkusit znova.🚀"
+  }
+});
 
 const setFocus = () => {
   setTimeout(() => {
@@ -141,9 +159,18 @@ const checkAnswer = () => {
     correctResult = numberA.value / numberB.value;
   }
 
+  if (userAnswer.value === null || userAnswer.value.toString().trim().length === 0) {
+    feedbackMessage.value = emptyMessages[Math.floor(Math.random() * emptyMessages.length)];
+    isCorrect.value = false;
+    return;
+  }
+
   if (Number(userAnswer.value) === correctResult) {
+    if (isCorrect.value === null) {
+      score.value++;
+    }
+
     isCorrect.value = true;
-    score.value++;
     feedbackMessage.value =
       successMessages[Math.floor(Math.random() * successMessages.length)];
 
@@ -155,9 +182,12 @@ const checkAnswer = () => {
         isGameOver.value = true;
       }
     }, 1200);
+
   } else {
+    if (isCorrect.value === null) {
+      errors.value++;
+    }
     isCorrect.value = false;
-    errors.value++;
     feedbackMessage.value =
       errorMessages[Math.floor(Math.random() * errorMessages.length)];
   }
@@ -174,7 +204,8 @@ onMounted(() => {
   <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
   <div class="game-screen">
     <div class="game-screen-header">
-      <button class="back-button" @click="goHome">Menu</button>
+        <button v-if="!isGameOver" class="back-button" @click="goHome">Menu</button>
+        <button v-else class="back-button" @click="resetToStart">Změna hráče</button>
       <div class="progress-container">
         <div
           v-for="n in maxQuestions"
@@ -223,7 +254,7 @@ onMounted(() => {
     </div>
     <div v-else class="game-over-screen">
       <h1>🎉 HOTOVO!</h1>
-      <p><strong>Skvělá práce. Jen tak dál.</strong></p>
+      <p><strong>{{ finalMessage }}</strong></p>
 
       <div class="stats">
         <p class="stats-player">
@@ -240,7 +271,7 @@ onMounted(() => {
         <p class="stats-score"><strong>Správně: </strong>{{ score }} ✅</p>
         <p class="stats-errors"><strong>Chybně: </strong>{{ errors }} ❌</p>
 
-        <button class="reset-button" @click="resetToStart">Změna hráče</button>
+        <button class="back-button" @click="goHome">Menu</button>
       </div>
     </div>
     <video v-if="isGameOver" autoplay muted loop class="background-video">
@@ -379,19 +410,21 @@ input[type="number"] {
 
 .math-problem {
   display: flex;
+  justify-content: center;
   font-family: "Chewy";
   font-size: 60px;
   color: gold;
+  gap: 20px;
 }
 
 .answer-input {
   font-family: "Chewy";
-  width: 120px;
+  width: 200px;
   font-size: 60px;
   background-color: transparent;
   color: gold;
   border: none;
-  text-align: center;
+  text-align: left;
   outline: none;
   padding: 0;
 }
@@ -436,10 +469,11 @@ button:hover {
 
 .game-over-screen {
   position: relative;
+  width: 600px;
   font-family: "Indie Flower";
   font-size: 2rem;
   border-radius: 20px;
-  padding: 40px;
+  padding: 20px;
   bottom: 50px;
   text-align: center;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
@@ -464,7 +498,7 @@ button:hover {
 }
 
 .stats {
-  padding: 50px;
+  padding: 20px;
   background-color: rgb(255, 253, 235);
   border-radius: 20px;
 }
@@ -474,6 +508,18 @@ button:hover {
 }
 .stats-errors {
   color: #ff7675;
+}
+
+.stats .back-button {
+  background-color: rgb(255, 242, 0);
+  color: black;
+  padding: 10px;
+  font-size: 30px;
+}
+
+.stats .back-button:hover {
+  background-color: rgb(253, 255, 156);
+  transform: scale(1.1);
 }
 
 @keyframes fadeInScale {
