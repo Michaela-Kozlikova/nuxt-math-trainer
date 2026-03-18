@@ -522,6 +522,7 @@ button:hover {
     padding: 20px 5px;
     font-size: 1.5rem;
     width: 160px;
+    white-space: nowrap; 
   }
 
   .dropdown-tongue {
