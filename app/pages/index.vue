@@ -101,7 +101,7 @@ const handleFullReset = () => {
           <button :style="{ animationDelay: '0.5s' }" @click="chosenMathOperation = 'division'">Dělení</button>
         </div>
         <div v-else-if="!chosenDifficulty" class="difficulty-selection">
-          <button class="back-step-button" @click="chosenMathOperation = null">⬅</button>
+          <button class="back-step-button" @click="chosenMathOperation = null"> <- </button>
           <h2>Vyber obtížnost</h2>
           <div class="difficulty-wrapper">
             <div class="dropdown-container">
@@ -124,7 +124,7 @@ const handleFullReset = () => {
           </div>
         </div>
         <div v-else-if="showStartMessage" class="welcome-screen">
-          <button class="back-step-button" @click="chosenDifficulty = null; showStartMessage = false">⬅</button>
+          <button class="back-step-button" @click="chosenDifficulty = null; showStartMessage = false"> <- </button>
           <h2>
             Máš vybráno {{ operationNames[chosenMathOperation] }} <span v-if="chosenSubtype">{{ chosenSubtype }}</span>, obtížnost {{ difficultyNames[chosenDifficulty] }}
           </h2>
@@ -333,8 +333,8 @@ button:hover {
 
   .header h1 {
     text-align: center;
-    font-size: 1.6rem;
-    margin-top: 40px;
+    font-size: 1.8rem;
+    margin-top: 36px;
   }
 
   .math-operation h2,
@@ -342,7 +342,7 @@ button:hover {
   .welcome-screen h2 {
     font-size: 1.4rem;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 
   .name-selection-screen button {
@@ -378,19 +378,23 @@ button:hover {
     top: 0;
     left: 0;
     font-size: 0.8rem;
-    padding: 4px;
+    padding: 2px;
     z-index: 100;
-    max-width: 90px;
+    max-width: 120px;
   }
 
   .difficulty-selection .back-step-button {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 2px;
+    padding: 2px 8px;
     font-size: 1rem;
   }
 
+  .difficulty-selection button {
+    margin-bottom: 0;
+  }
+  
   .dropdown-tongue {
     display: flex;
     flex-wrap: wrap;
@@ -398,6 +402,7 @@ button:hover {
     padding: 8px;
     gap: 8px;
     max-width: 140px;
+    margin-top: 0;
   }
 
   .dropdown-tongue button {
@@ -409,13 +414,15 @@ button:hover {
 
   .dropdown-tongue p {
     font-size: 1.4rem;
+    color: rgb(166, 49, 255);
+    font-weight: bold;
   }
 
   .welcome-screen .back-step-button {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 2px;
+    padding: 2px 8px;
     font-size: 1rem;
   }
 
@@ -465,7 +472,7 @@ button:hover {
   }
 
   .math-operation .back-step-button {
-    padding: 4px;
+    padding: 2px;
     font-size: 1rem;
   }
 
@@ -523,22 +530,26 @@ button:hover {
     font-size: 1.5rem;
     width: 160px;
     white-space: nowrap; 
+    margin-bottom: 0;
   }
 
   .dropdown-tongue {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 4px;
+    padding: 8px;
     gap: 8px;
-    max-width: 260px;
+    max-width: 180px;
+    margin-top: 0;
   }
 
   .dropdown-tongue button {
-    padding: 12px;
-    width: 100px;
+    padding: 10px;
     font-size: 1.4rem;
-  }
+    margin: 0;
+    width: 50px;
+    height: 50px;
+  } 
 
   .dropdown-tongue p {
     font-size: 1.6rem;
@@ -582,7 +593,7 @@ button:hover {
 
   .math-operation .back-step-button {
     font-size: 1.2rem;
-    max-width: 140px;
+    max-width: 130px;
     padding: 6px;
   }
 
