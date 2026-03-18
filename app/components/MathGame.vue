@@ -496,8 +496,8 @@ button:hover {
 
 .background-video {
   position: fixed;
-  height: 100%;
-  width: 100%;
+  height: 100dvh;
+  width: 100vw;
   top: 0;
   left: 0;
   object-fit: cover;
@@ -646,6 +646,18 @@ button:hover {
     font-size: 1.4rem;
     padding: 8px;
   }
+
+@media (min-width: 344px) {
+  .background-video {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    transform: translateZ(0);
+    inset: 0;
+  }
+}
 
 
 @media (min-width: 768px) {
