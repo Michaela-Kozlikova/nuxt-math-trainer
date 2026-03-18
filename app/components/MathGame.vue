@@ -165,7 +165,6 @@ const checkAnswer = () => {
   ) {
     feedbackMessage.value =
       emptyMessages[Math.floor(Math.random() * emptyMessages.length)];
-    isCorrect.value = false;
     return;
   }
 
@@ -248,14 +247,7 @@ onMounted(() => {
       </div>
 
       <div v-if="feedbackMessage" class="feedback-container">
-        <p
-          :class="[
-            'feedback-text',
-            { success: isCorrect === true, error: isCorrect === false },
-          ]"
-        >
-          {{ feedbackMessage }}
-        </p>
+        <p :class="['feedback-text', { success: isCorrect === true, error: isCorrect === false || (isCorrect === null && feedbackMessage !== '') }, ]" >{{ feedbackMessage }}</p>
       </div>
       <div class="actions">
         <button v-if="isCorrect !== true" @click="checkAnswer">
@@ -783,7 +775,7 @@ button:hover {
 
   .game-over-screen {
     width: 500px;
-    font-size: 2rem;
+    font-size: 2.1rem;
     margin-top: -80px;
   }
 
