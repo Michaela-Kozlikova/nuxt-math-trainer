@@ -5,7 +5,7 @@ const props = defineProps({
   operation: String,
   difficulty: String,
   subType: Number,
-  playerName: String
+  playerName: String,
 });
 
 const emit = defineEmits(["close", "resetAll"]);
@@ -15,7 +15,7 @@ const resetToStart = () => {
 };
 
 const numberA = ref(0);
-const numberB = ref(0);
+const numberB = ref(0); 
 const score = ref(0);
 const errors = ref(0);
 const currentQuestionCount = ref(1);
@@ -38,13 +38,13 @@ const operationNames = {
   addition: "sčítání",
   subtraction: "odčítání",
   multiplication: "násobení",
-  division: "dělení"
+  division: "dělení",
 };
 
 const difficultyNames = {
   easy: "lehká",
   medium: "střední",
-  hard: "těžká"
+  hard: "těžká",
 };
 
 const successMessages = [
@@ -52,29 +52,29 @@ const successMessages = [
   "Jen tak dál",
   "Skvělá práce",
   "Jsi šikulka",
-  "Perfektní!"
+  "Perfektní!",
 ];
 const errorMessages = [
   "Zkus to znovu, to dáš!",
   "Skoro to bylo",
-  "Těsně vedle"
+  "Těsně vedle",
 ];
 
 const emptyMessages = [
   "Haló! Tady je prázdno! 🫙",
   "Napiš aspoň něco, prázdno není výsledek! ✍️",
-  "Bez výsledku se dál nepohneme... 🛑"
+  "Bez výsledku se dál nepohneme... 🛑",
 ];
 
 const finalMessage = computed(() => {
   if (score.value >= 18) {
-    return "Jsi matematický bůh! 🏆"
+    return "Jsi matematický bůh! 🏆";
   } else if (score.value >= 15) {
-    return "Skoro bez chybičky. Skvělá práce.⭐"
+    return "Skoro bez chybičky. Skvělá práce. ⭐";
   } else if (score.value >= 11) {
-    return " Dobrá práce, ale ještě to trochu potrénujeme?💪"
-  } else { 
-    return "Chce to ještě trénovat. Pojď si to zkusit znova.🚀"
+    return " Dobrá práce, ale ještě to trochu potrénujeme? 💪";
+  } else {
+    return "Chce to ještě trénovat. Pojď si to zkusit znova. 🚀";
   }
 });
 
@@ -159,8 +159,12 @@ const checkAnswer = () => {
     correctResult = numberA.value / numberB.value;
   }
 
-  if (userAnswer.value === null || userAnswer.value.toString().trim().length === 0) {
-    feedbackMessage.value = emptyMessages[Math.floor(Math.random() * emptyMessages.length)];
+  if (
+    userAnswer.value === null ||
+    userAnswer.value.toString().trim().length === 0
+  ) {
+    feedbackMessage.value =
+      emptyMessages[Math.floor(Math.random() * emptyMessages.length)];
     isCorrect.value = false;
     return;
   }
@@ -182,7 +186,6 @@ const checkAnswer = () => {
         isGameOver.value = true;
       }
     }, 1200);
-
   } else {
     if (isCorrect.value === null) {
       errors.value++;
@@ -201,11 +204,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chewy&display=swap"
+    rel="stylesheet"
+  />
   <div class="game-screen">
     <div class="game-screen-header">
-        <button v-if="!isGameOver" class="back-button" @click="goHome">Menu</button>
-        <button v-else class="back-button" @click="resetToStart">Změna hráče</button>
+      <button v-if="!isGameOver" class="back-button menu-btn" @click="goHome">
+        Menu
+      </button>
+      <button v-else class="back-button" @click="resetToStart">
+        Změna hráče
+      </button>
       <div class="progress-container">
         <div
           v-for="n in maxQuestions"
@@ -223,7 +233,7 @@ onMounted(() => {
         Hraje: <span>{{ props.playerName }}</span>
       </div>
     </div>
-    <div v-if="!isGameOver">
+    <div v-if="!isGameOver" class="game-content">
       <div class="math-problem">
         {{ numberA }} {{ mathSymbols[props.operation] }} {{ numberB }} =
         <input
@@ -248,13 +258,19 @@ onMounted(() => {
         </p>
       </div>
       <div class="actions">
-        <button v-if="isCorrect !== true" @click="checkAnswer">Zkontrolovat</button>
-        <button v-if="isCorrect === true" @click="generate">Další příklad</button>
+        <button v-if="isCorrect !== true" @click="checkAnswer">
+          Zkontrolovat
+        </button>
+        <button v-if="isCorrect === true" @click="generate">
+          Další příklad
+        </button>
       </div>
     </div>
     <div v-else class="game-over-screen">
       <h1>🎉 HOTOVO!</h1>
-      <p><strong>{{ finalMessage }}</strong></p>
+      <p>
+        <strong>{{ finalMessage }}</strong>
+      </p>
 
       <div class="stats">
         <p class="stats-player">
@@ -310,7 +326,6 @@ input[type="number"] {
   display: flex;
   box-sizing: border-box;
   justify-content: space-between;
-  position: absolute;
   top: 0;
   left: 0;
   align-items: center;
@@ -415,6 +430,7 @@ input[type="number"] {
   font-size: 60px;
   color: gold;
   gap: 20px;
+  width: 100%;
 }
 
 .answer-input {
@@ -424,7 +440,6 @@ input[type="number"] {
   background-color: transparent;
   color: gold;
   border: none;
-  text-align: left;
   outline: none;
   padding: 0;
 }
@@ -536,4 +551,246 @@ button:hover {
     transform: scale(1);
   }
 }
+
+  .game-screen-header {
+    display: flex;
+    box-sizing: border-box;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .game-screen {
+    display: block;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    overflow-x: hidden;
+    padding: 0;
+    width: 100vw;
+  }
+
+  .game-screen-header .back-button {
+    margin: 0;
+    font-size: 1rem;
+    padding: 8px;
+    order: 1;
+  }
+
+  .progress-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    justify-content: center;
+    justify-items: center;
+    gap: 4px;
+    width: 100%;
+    flex-basis: 100%;
+    margin: 30px auto 0 auto;
+    order: 3;
+  }
+
+  .progress-container .star-step {
+    font-size: 1rem;
+  }
+
+  .player-info {
+    margin: 0;
+    font-size: 1.2rem;
+    width: auto;
+    order: 2;
+  }
+
+  .game-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .math-problem {
+    display: flex;
+    position: relative;
+    font-size: 1.8rem;
+    margin: 60px auto;
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  .answer-input {
+    display: inline-block;
+    font-size: 1.8rem;
+    width: 100%;
+    max-width: 100px;
+    padding: 0;
+  }
+
+  .feedback-container {
+    text-align: center;
+  }
+
+  .feedback-text {
+    font-size: 1.6rem;
+  }
+
+  .actions button {
+    font-size: 1.4rem;
+    padding: 8px;
+  }
+
+  .game-over-screen {
+    font-size: 1.2rem;
+    width: 280px;
+    margin: 0 auto;
+  }
+
+  .stats .back-button {
+    font-size: 1.4rem;
+    padding: 8px;
+  }
+
+
+@media (min-width: 768px) {
+  .game-screen {
+    display: block;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    overflow-x: hidden;
+    padding: 0;
+    width: 100vw;
+  }
+
+  .game-screen-header .back-button {
+    margin: 0;
+    font-size: 1.2rem;
+    padding: 8px;
+    order: 1;
+  }
+
+  .progress-container {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+    margin-bottom: 60px;
+  }
+
+  .progress-container .star-step {
+    font-size: 1.5rem;
+    padding: 2px;
+  }
+
+  .player-info {
+    margin: 0;
+    font-size: 1.5rem;
+    width: auto;
+  }
+
+  .math-problem {
+    display: flex;
+    font-size: 3.4rem;
+    margin: 60px auto;
+    width: 100%;
+  }
+
+  .answer-input {
+    display: inline-block;
+    font-size: 3.4rem;
+    width: 100%;
+    max-width: 200px;
+    padding: 0;
+  }
+
+  .feedback-container {
+    text-align: center;
+  }
+
+  .feedback-text {
+    font-size: 2.2rem;
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    font-size: 1.4rem;
+    padding: 12px;
+  }
+
+  .game-over-screen {
+    font-size: 2rem;
+    width: 400px;
+    margin: 0 auto;
+  }
+
+  .stats .back-button {
+    font-size: 1.4rem;
+    padding: 8px;
+  }
+}
+
+@media (min-width: 1020px) {
+  .game-screen-header {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 10px 20px;
+    margin-bottom: 90px;
+  }
+
+  .progress-container {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    flex-basis: auto;
+    width: auto;
+    order: 2;
+    flex-grow: 1;
+  }
+
+  .progress-container .star-step {
+    font-size: 1.8rem;
+  }
+
+  .player-info {
+    font-size: 2rem;
+    padding: 20px;
+  }
+
+  .math-problem {
+    font-size: 4rem;
+    gap: 20px;
+    margin-top: 80px;
+  }
+
+  .answer-input {
+    font-size: 4rem; 
+  }
+
+  .feedback-text {
+    font-size: 3rem;
+  }
+
+  .actions button {
+    font-size: 1.8rem;
+  }
+
+  .game-over-screen {
+    width: 500px;
+    font-size: 2rem;
+    margin-top: -80px;
+  }
+
+  .stats .back-button {
+    padding: 10px;
+    font-size: 1.8rem;
+  }
+}
+
 </style>

@@ -126,9 +126,9 @@ const handleFullReset = () => {
         <div v-else-if="showStartMessage" class="welcome-screen">
           <button class="back-step-button" @click="chosenDifficulty = null; showStartMessage = false">⬅</button>
           <h2>
-            Máš vybráno {{ operationNames[chosenMathOperation] }} <span v-if="chosenSubtype">{{ chosenSubtype }}</span> a obtížnost {{ difficultyNames[chosenDifficulty] }}
+            Máš vybráno {{ operationNames[chosenMathOperation] }} <span v-if="chosenSubtype">{{ chosenSubtype }}</span>, obtížnost {{ difficultyNames[chosenDifficulty] }}
           </h2>
-          <button @click="console.log('klik na start');showStartMessage = false; gameStarted = true;"> Jdeme na to! 🧠 </button>
+          <button class="game-start-btn" @click="console.log('click to start');showStartMessage = false; gameStarted = true;"> Jdeme na to! 🧠 </button>
         </div>
       </div>
     </div>
@@ -319,5 +319,319 @@ button:hover {
   margin-top: 54px;
   font-size: 30px;
   font-weight: bolder;
+}
+
+@media (min-width: 344px) {
+  .app-container {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .header h1 {
+    text-align: center;
+    font-size: 1.6rem;
+    margin-top: 40px;
+  }
+
+  .math-operation h2,
+  .difficulty-selection h2,
+  .welcome-screen h2 {
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .name-selection-screen button {
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 20px;
+  }
+
+  .math-operation button {
+    width: calc(50% - 20px);
+    margin: 10px;
+    padding: 8px;
+    font-size: 1.2rem;
+    max-width: 120px;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .controls button {
+    margin: 10px;
+    padding: 8px;
+    font-size: 1.2rem;
+    max-width: 120px;
+  }
+
+  .math-operation .back-step-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.8rem;
+    padding: 4px;
+    z-index: 100;
+    max-width: 90px;
+  }
+
+  .difficulty-selection .back-step-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2px;
+    font-size: 1rem;
+  }
+
+  .dropdown-tongue {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 8px;
+    gap: 8px;
+    max-width: 140px;
+  }
+
+  .dropdown-tongue button {
+    padding: 10px;
+    min-width: 40px;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .dropdown-tongue p {
+    font-size: 1.4rem;
+  }
+
+  .welcome-screen .back-step-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2px;
+    font-size: 1rem;
+  }
+
+  .name-selection-screen {
+    display: flex;
+    padding-top: 40px;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .name-selection-screen h2 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .name-input {
+    font-size: 1.2rem;
+    padding: 10px;
+    height: 30px;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-container {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .name-input {
+    font-size: 1.8rem;
+  }
+
+  .name-selection-screen h2 {
+    font-size: 2.6rem;
+    text-align: center;
+  }
+
+  .name-selection-screen button {
+    padding: 20px;
+    font-size: 1.8rem;
+    margin: 40px;
+  }
+
+  .math-operation .back-step-button {
+    padding: 4px;
+    font-size: 1rem;
+  }
+
+  .header h1 {
+    display: block;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 2.6rem;
+    padding-top: 10px;
+  }
+
+  .controls {
+    margin-top: 20px;
+  }
+
+  .controls h2 {
+    font-size: 2rem;
+  }
+
+  .math-operation {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;   
+    gap: 10px;
+    width: 100%;
+  }
+
+  .math-operation button {
+    box-sizing: border-box;
+    padding: 20px 5px;
+    font-size: 1.4rem;
+    width: 160px;
+  }
+
+  .difficulty-selection {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;   
+    gap: 10px;
+    width: 100%;
+  }
+
+  .difficulty-selection .back-step-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 6px;
+    font-size: 1.2rem;
+  }
+
+  .difficulty-wrapper button {
+    box-sizing: border-box;
+    padding: 20px 5px;
+    font-size: 1.5rem;
+    width: 160px;
+  }
+
+  .dropdown-tongue {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 4px;
+    gap: 8px;
+    max-width: 260px;
+  }
+
+  .dropdown-tongue button {
+    padding: 12px;
+    width: 100px;
+    font-size: 1.4rem;
+  }
+
+  .dropdown-tongue p {
+    font-size: 1.6rem;
+  }
+
+  .welcome-screen .back-step-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 6px;
+    font-size: 1.2rem;
+  }
+
+  .welcome-screen .game-start-btn {
+    padding: 5px;
+    font-size: 1.4rem;
+    width: 400px;
+  }
+}
+
+@media (min-width: 1020px) {
+  .name-selection-screen h2 {
+    font-size: 3rem;
+  }
+
+  .name-selection-screen {
+    display: flex;
+    padding-top: 20px;
+  }
+
+  .name-input {
+    font-size: 1.8rem;
+    padding: 16px;
+    height: 40px;
+    margin-top: 40px;
+  }
+
+  .name-selection-screen button {
+    margin: 80px;
+  }
+
+  .math-operation .back-step-button {
+    font-size: 1.2rem;
+    max-width: 140px;
+    padding: 6px;
+  }
+
+  .header h1 {
+    text-align: center;
+    font-size: 3rem;
+    max-width: 100%;
+  }
+
+  .math-operation h2 {
+    font-size: 2.2rem;
+  }
+
+  .math-operation button {
+    margin: 10px;
+    padding: 30px 10px;
+    font-size: 1.4rem;
+  }
+
+  .difficulty-selection h2 {
+    font-size: 2.2rem;
+  }
+
+  .difficulty-selection button {
+    margin: 10px;
+    padding: 30px 10px;
+    font-size: 1.4rem;
+    white-space: nowrap;
+    margin-bottom: 0;
+  }
+
+  .dropdown-tongue {
+    gap: 10px;
+    padding: 10px;
+    max-width: 180px;
+    margin-top: 0;
+  }
+
+  .dropdown-tongue button {
+    padding: 10px 8px;
+    font-size: 1.4rem;
+    margin: 0;
+    width: 50px;
+    height: 50px;
+  }
+
+  .welcome-screen .game-start-btn {
+    padding: 20px;
+    font-size: 1.5rem;
+    max-width: 220px;
+  }
 }
 </style>
