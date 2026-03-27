@@ -282,7 +282,7 @@ onMounted(() => {
         <button class="back-button" @click="goHome">Menu</button>
       </div>
     </div>
-    <video v-if="isGameOver" autoplay muted loop playsinline webkit-playsinline class="background-video">
+    <video v-if="isGameOver" autoplay muted playsinline webkit-playsinline loop class="background-video">
       <source src="/pics/confetti.mp4" type="video/mp4" />
     </video>
   </div>
@@ -496,13 +496,14 @@ button:hover {
 
 .background-video {
   position: fixed;
-  height: 100dvh;
-  width: 100vw;
+  height: 120%;
+  width: 100%;
   top: 0;
-  left: 0;
   object-fit: cover;
   z-index: 0;
   pointer-events: none;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .stats {
@@ -646,19 +647,6 @@ button:hover {
     font-size: 1.4rem;
     padding: 8px;
   }
-
-@media (min-width: 344px) {
-  .background-video {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-    transform: translateZ(0);
-    inset: 0;
-  }
-}
-
 
 @media (min-width: 768px) {
   .game-screen {
