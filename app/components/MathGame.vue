@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
+
 
 const props = defineProps({
   operation: String,
@@ -20,12 +21,15 @@ const score = ref(0);
 const errors = ref(0);
 const currentQuestionCount = ref(1);
 const maxQuestions = 20;
+const lastProblem = ref("");
 const isGameOver = ref(false);
 
 const userAnswer = ref("");
 const feedbackMessage = ref("");
 const isCorrect = ref(null);
 const answerInput = ref(null);
+const miscalculatedProblems = ref([]);
+const showMiscalculated = ref(false);
 
 const mathSymbols = {
   addition: "+",
@@ -67,11 +71,11 @@ const emptyMessages = [
 ];
 
 const finalMessage = computed(() => {
-  if (score.value >= 18) {
+  if (errors.value === 0) {
     return "Jsi matematický bůh! 🏆";
-  } else if (score.value >= 15) {
+  } else if (errors.value <= 3) {
     return "Skoro bez chybičky. Skvělá práce. ⭐";
-  } else if (score.value >= 11) {
+  } else if (errors.value <= 7) {
     return " Dobrá práce, ale ještě to trochu potrénujeme? 💪";
   } else {
     return "Chce to ještě trénovat. Pojď si to zkusit znova. 🚀";
@@ -101,47 +105,55 @@ const generate = () => {
   if (props.difficulty === "medium") max = 1000;
   if (props.difficulty === "hard") max = 100000;
 
-  if (props.operation === "addition") {
-    const totalResult = Math.floor(Math.random() * (max - 2)) + 2;
-    numberA.value = Math.floor(Math.random() * (totalResult - 1)) + 1;
-    numberB.value = totalResult - numberA.value;
-  } else if (props.operation === "subtraction") {
-    numberA.value = Math.floor(Math.random() * max) + 1;
-    numberB.value = Math.floor(Math.random() * max) + 1;
-    if (numberB.value > numberA.value) {
-      let temp = numberA.value;
-      numberA.value = numberB.value;
-      numberB.value = temp;
+  let newProblem = "";
+
+  do {
+    if (props.operation === "addition") {
+      const totalResult = Math.floor(Math.random() * (max - 2)) + 2;
+      numberA.value = Math.floor(Math.random() * (totalResult - 1)) + 1;
+      numberB.value = totalResult - numberA.value;
+    } else if (props.operation === "subtraction") {
+      numberA.value = Math.floor(Math.random() * max) + 1;
+      numberB.value = Math.floor(Math.random() * max) + 1;
+      if (numberB.value > numberA.value) {
+        let temp = numberA.value;
+        numberA.value = numberB.value;
+        numberB.value = temp;
+      }
+    } else if (props.operation === "multiplication") {
+      let multiLimit = 10;
+      if (props.difficulty === "medium") multiLimit = 20;
+      if (props.difficulty === "hard") multiLimit = 100;
+
+      if (props.difficulty === "easy" && props.subType) {
+        numberB.value = props.subType;
+        numberA.value = Math.floor(Math.random() * 10) + 1;
+      } else {
+        numberA.value = Math.floor(Math.random() * multiLimit) + 1;
+        numberB.value = Math.floor(Math.random() * 10) + 1;
+      }
+    } else if (props.operation === "division") {
+      let divisionLimit = 10;
+      if (props.difficulty === "medium") divisionLimit = 20;
+      if (props.difficulty === "hard") divisionLimit = 50;
+
+      const result = Math.floor(Math.random() * divisionLimit) + 1;
+      let b;
+
+      if (props.difficulty === "easy" && props.subType) {
+        b = props.subType;
+      } else {
+        b = Math.floor(Math.random() * 9) + 2;
+      }
+      numberA.value = result * b;
+      numberB.value = b;
     }
-  } else if (props.operation === "multiplication") {
-    let multiLimit = 10;
-    if (props.difficulty === "medium") multiLimit = 20;
-    if (props.difficulty === "hard") multiLimit = 100;
 
-    if (props.difficulty === "easy" && props.subType) {
-      numberB.value = props.subType;
-      numberA.value = Math.floor(Math.random() * 10) + 1;
-    } else {
-      numberA.value = Math.floor(Math.random() * multiLimit) + 1;
-      numberB.value = Math.floor(Math.random() * 10) + 1;
-    }
-  } else if (props.operation === "division") {
-    let divisionLimit = 10;
-    if (props.difficulty === "medium") divisionLimit = 20;
-    if (props.difficulty === "hard") divisionLimit = 50;
+    newProblem = `${numberA.value}${props.operation}${numberB.value}`;
 
-    const result = Math.floor(Math.random() * divisionLimit) + 1;
-    let b;
+  } while (newProblem === lastProblem.value);
 
-    if (props.difficulty === "easy" && props.subType) {
-      b = props.subType;
-    } else {
-      b = Math.floor(Math.random() * 9) + 2;
-    }
-
-    numberA.value = result * b;
-    numberB.value = b;
-  }
+  lastProblem.value = newProblem;
 
   setFocus();
 };
@@ -186,11 +198,17 @@ const checkAnswer = () => {
       }
     }, 1200);
   } else {
-    if (isCorrect.value === null) {
+      const wrongAnswer = userAnswer.value;
+
+      const problemText = `${numberA.value} ${mathSymbols[props.operation]} ${numberB.value} = ${wrongAnswer}`;
+
+      if (!miscalculatedProblems.value.includes(problemText)) {
+        miscalculatedProblems.value.push(problemText);
+      }
       errors.value++;
-    }
-    isCorrect.value = false;
-    feedbackMessage.value =
+      isCorrect.value = false;
+      userAnswer.value = "";
+      feedbackMessage.value =
       errorMessages[Math.floor(Math.random() * errorMessages.length)];
   }
 };
@@ -199,6 +217,14 @@ const goHome = () => emit("close");
 
 onMounted(() => {
   generate();
+});
+
+const confettiVideo = ref(null);
+
+watch(isGameOver, (val) => {
+  if (val && confettiVideo.value) {
+    confettiVideo.value.play();
+  }
 });
 </script>
 
@@ -279,10 +305,23 @@ onMounted(() => {
         <p class="stats-score"><strong>Správně: </strong>{{ score }} ✅</p>
         <p class="stats-errors"><strong>Chybně: </strong>{{ errors }} ❌</p>
 
+        <div v-if="miscalculatedProblems.length > 0" class="miscalculated-section">
+          <button class="toggle-errors-btn" @click="showMiscalculated = !showMiscalculated">
+            {{ showMiscalculated ? 'Skrýt' : 'Co se nepovedlo?' }}
+          </button>
+          <div v-if="showMiscalculated" class="wrong-list-overlay">
+            <div class="wrong-list-content">
+              <div class="miscalculated-container">
+                <span v-for="(item, index) in miscalculatedProblems" :key="index" class="miscalculated-tag">{{ item }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+         
         <button class="back-button" @click="goHome">Menu</button>
       </div>
     </div>
-    <video v-if="isGameOver" autoplay muted playsinline webkit-playsinline loop class="background-video">
+    <video v-show="isGameOver" autoplay muted playsinline webkit-playsinline preload="auto" loop class="background-video">
       <source src="/pics/confetti.mp4" type="video/mp4" />
     </video>
   </div>
@@ -495,6 +534,7 @@ button:hover {
 }
 
 .background-video {
+  display: block;
   position: fixed;
   height: 120%;
   width: 100%;
@@ -646,6 +686,48 @@ button:hover {
   .stats .back-button {
     font-size: 1.4rem;
     padding: 8px;
+    margin-top: 10px;
+  }
+
+  .miscalculated-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .miscalculated-tag {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+
+  .stats .toggle-errors-btn {
+    margin: 10px 0 10px 0;
+    background-color: #fac188;
+    font-size: 1.2rem;
+    padding: 6px; 
+    transition: all 0.2s ease;
+  }
+
+  .toggle-errors-btn:hover {
+    background-color: #fce0c3;
+    transform: translateY(-2px);
+  }
+  
+  .wrong-list-overlay {
+    width: 100%;
+    animation: fadeInDown 0.4s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from { 
+      opacity: 0; 
+      transform: translateY(-20px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
   }
 
 @media (min-width: 768px) {
@@ -723,6 +805,12 @@ button:hover {
   .stats .back-button {
     font-size: 1.4rem;
     padding: 8px;
+    margin-top: 20px;
+  }
+
+  .stats .toggle-errors-btn {
+    font-size: 1.4rem;
+    padding: 8px;
   }
 }
 
@@ -783,7 +871,12 @@ button:hover {
   .stats .back-button {
     padding: 10px;
     font-size: 1.8rem;
+    margin-top: 20px;
+  }
+
+  .stats .toggle-errors-btn {
+    font-size: 1.8rem;
+    padding: 10px;
   }
 }
-
 </style>
